@@ -1,0 +1,93 @@
+.footer {
+  margin: 0 auto;
+}
+
+.configSection {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.configButton {
+  border-radius: 20px !important;
+  border-color: rgba(128, 128, 128, 0.374) !important;
+  text-transform: none !important;
+}
+
+.configIcon {
+  font-size: 18px !important;
+  margin-right: 3px;
+  color: #1a73e8;
+}
+.infoSection {
+  display: flex;
+  margin: 0 16px 16px 16px;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.infoText {
+  justify-content: center;
+  font-size: 14px;
+  line-height: 1.5;
+  color: #70757a;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.infoLink {
+  color: #1a73e8;
+  text-decoration: none;
+}
+
+.infoLink:hover {
+  text-decoration: underline;
+}
+
+/* Separador */
+.separator {
+  border: none;
+  border-top: 1px solid #dadce0;
+  margin: 24px 0;
+}
+
+/* Sección de navegación */
+.navigationSection {
+  margin-bottom: 16px;
+}
+
+.navigation {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.navLink {
+  color: #1a73e8;
+  text-decoration: none;
+  font-size: 14px;
+  transition: color 0.2s ease;
+}
+
+.navLink:hover {
+  color: #1557b0;
+  text-decoration: underline;
+}
+
+/* Sección de botones desplegables */
+.dropdownSection {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  padding-bottom: 40px;
+  padding-top: 20px;
+  flex-wrap: wrap;
+}
+.dropdownButton {
+  border: none !important;
+  text-transform: none !important;
+  font-weight: bold !important;
+}

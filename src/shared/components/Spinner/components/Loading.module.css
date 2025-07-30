@@ -1,0 +1,12 @@
+.center {
+  position: fixed; /* Fija el contenedor a la pantalla */
+  top: 0; /* Alinea el contenedor al borde superior */
+  left: 0; /* Alinea el contenedor al borde izquierdo */
+  width: 100vw; /* Asegura que el contenedor cubra el 100% del ancho de la ventana */
+  height: 100vh; /* Asegura que el contenedor cubra el 100% de la altura de la ventana */
+  display: flex; /* Usa flexbox para centrar el contenido */
+  justify-content: center; /* Centra el spinner horizontalmente */
+  align-items: center; /* Centra el spinner verticalmente */
+  background-color: rgba(0, 0, 0, 0.427); /* Fondo semitransparente */
+  z-index: 9999;
+}

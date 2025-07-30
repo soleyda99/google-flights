@@ -1,0 +1,28 @@
+.subtitle {
+  margin-bottom: 20px;
+  margin-top: 30px;
+}
+
+.flightLinks {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+/* Responsive design for mobile */
+@media (max-width: 768px) {
+  .flightLinks {
+    grid-template-columns: 1fr;
+  }
+}
+
+.flightLink {
+  color: #1a73e8;
+  text-decoration: none;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.flightLink:hover {
+  color: #1557b0;
+}
