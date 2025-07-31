@@ -26,13 +26,21 @@ import { PassengerSelector } from "./components/PassengerSelector";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { AirportSelector } from "./components/AirportSelector";
+import { SearchResults } from "../SearchResults/SearchResults";
 import type { SearchData } from "./interfaces/types";
+import type { Itinerary } from "../SearchResults/interfaces/type";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { searchFlights } from "../../../services/searchServices";
 
-const Search = () => {
+interface SearchProps {
+  onSearchResultsChange?: (hasResults: boolean) => void;
+}
+
+const Search = ({ onSearchResultsChange }: SearchProps) => {
   const [searchData, setSearchData] = useState<SearchData>(DEFAULT_SEARCH_DATA);
+  const [searchResults, setSearchResults] = useState<Itinerary[]>([]);
+  const [hasSearched, setHasSearched] = useState(false);
 
   const handleSwapLocations = () => {
     setSearchData((prev) => ({
@@ -46,9 +54,23 @@ const Search = () => {
     }));
   };
 
+  const handleClearResults = () => {
+    setSearchResults([]);
+    setHasSearched(false);
+    onSearchResultsChange?.(false);
+  };
+
   const handleSearch = async () => {
     const response = await searchFlights(searchData);
-    console.log(response, "prueba");
+    if (response.data) {
+      setSearchResults(response.data.itineraries);
+      setHasSearched(true);
+      onSearchResultsChange?.(true);
+    } else {
+      setSearchResults([]);
+      setHasSearched(true);
+      onSearchResultsChange?.(false);
+    }
   };
 
   const handleOriginChange = (
@@ -76,13 +98,13 @@ const Search = () => {
       destinationEntityId: entityId,
     }));
   };
-
   const handleDateChange = (date: Dayjs | null) => {
     if (date) {
       const formattedDate = date.format("YYYY-MM-DD");
       setSearchData((prev) => ({
         ...prev,
         date: formattedDate,
+        returnDate: "",
       }));
     }
   };
@@ -98,149 +120,167 @@ const Search = () => {
   };
 
   return (
-    <Card sx={{ marginBottom: "50px", overflow: "visible" }}>
-      <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 }, overflow: "visible" }}>
-        {/* Top Row - Dropdowns */}
-        <Grid container spacing={3} sx={{ mb: 3 }}>
-          <FormControl size="small">
-            <Select
-              value={searchData.tripType}
-              onChange={(e) =>
+    <>
+      <Card sx={{ marginBottom: "50px", overflow: "visible" }}>
+        <CardContent sx={{ p: { xs: 2, sm: 3, md: 4 }, overflow: "visible" }}>
+          {/* Top Row - Dropdowns */}
+          <Grid container spacing={3} sx={{ mb: 3 }}>
+            <FormControl size="small">
+              <Select
+                value={searchData.tripType}
+                onChange={(e) =>
+                  setSearchData((prev) => ({
+                    ...prev,
+                    tripType: e.target.value,
+                    returnDate: "",
+                  }))
+                }
+                startAdornment={<SwapIcon sx={{ color: "grey.500", mr: 1 }} />}
+              >
+                {TRIP_TYPES.map((tripType) => (
+                  <MenuItem key={tripType.value} value={tripType.value}>
+                    {tripType.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+
+            <PassengerSelector
+              value={searchData.passengers}
+              onChange={(passengers) =>
                 setSearchData((prev) => ({
                   ...prev,
-                  tripType: e.target.value,
-                  returnDate: "",
+                  passengers,
                 }))
               }
-              startAdornment={<SwapIcon sx={{ color: "grey.500", mr: 1 }} />}
-            >
-              {TRIP_TYPES.map((tripType) => (
-                <MenuItem key={tripType.value} value={tripType.value}>
-                  {tripType.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <PassengerSelector
-            value={searchData.passengers}
-            onChange={(passengers) =>
-              setSearchData((prev) => ({
-                ...prev,
-                passengers,
-              }))
-            }
-          />
-
-          <FormControl size="small">
-            <Select
-              value={searchData.cabinClass}
-              onChange={(e) =>
-                setSearchData((prev) => ({
-                  ...prev,
-                  cabinClass: e.target.value,
-                }))
-              }
-              displayEmpty
-              inputProps={{ "aria-label": "Without label" }}
-            >
-              {CLASS_OPTIONS.map((classOption) => (
-                <MenuItem key={classOption.value} value={classOption.value}>
-                  {classOption.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Grid>
-
-        {/* Origin/Destination & Dates */}
-        <Grid container spacing={2} sx={{ mb: 3 }}>
-          <Grid size={{ xs: 12, sm: 5 }}>
-            <AirportSelector
-              value={searchData.origin}
-              onChange={handleOriginChange}
-              placeholder="Origen"
-              icon={<FlightTakeoffIcon sx={{ color: "grey.500", mr: 1 }} />}
             />
+
+            <FormControl size="small">
+              <Select
+                value={searchData.cabinClass}
+                onChange={(e) =>
+                  setSearchData((prev) => ({
+                    ...prev,
+                    cabinClass: e.target.value,
+                  }))
+                }
+                displayEmpty
+                inputProps={{ "aria-label": "Without label" }}
+              >
+                {CLASS_OPTIONS.map((classOption) => (
+                  <MenuItem key={classOption.value} value={classOption.value}>
+                    {classOption.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Grid>
-          <Grid
-            size={{ xs: 12, sm: 2 }}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            <IconButton
-              onClick={handleSwapLocations}
+
+          {/* Origin/Destination & Dates */}
+          <Grid container spacing={2} sx={{ mb: 3 }}>
+            <Grid size={{ xs: 12, sm: 5 }}>
+              <AirportSelector
+                value={searchData.origin}
+                onChange={handleOriginChange}
+                placeholder="Origen"
+                icon={<FlightTakeoffIcon sx={{ color: "grey.500", mr: 1 }} />}
+              />
+            </Grid>
+            <Grid
+              size={{ xs: 12, sm: 2 }}
               sx={{
-                width: 40,
-                height: 40,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
               }}
             >
-              <SwapIcon />
-            </IconButton>
-          </Grid>
-          <Grid size={{ xs: 12, sm: 5 }}>
-            <AirportSelector
-              value={searchData.destination}
-              onChange={handleDestinationChange}
-              placeholder="Destino"
-              icon={<LocationIcon sx={{ color: "grey.500", mr: 1 }} />}
-            />
-          </Grid>
-
-          <Grid size={{ xs: 12, sm: searchData.tripType === "2" ? 12 : 6 }}>
-            <DemoContainer components={["DatePicker"]}>
-              <DatePicker
-                label="Fecha de ida"
-                format="DD-MM-YYYY"
-                onChange={handleDateChange}
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                  },
+              <IconButton
+                onClick={handleSwapLocations}
+                sx={{
+                  width: 40,
+                  height: 40,
                 }}
-                minDate={dayjs()}
+              >
+                <SwapIcon />
+              </IconButton>
+            </Grid>
+            <Grid size={{ xs: 12, sm: 5 }}>
+              <AirportSelector
+                value={searchData.destination}
+                onChange={handleDestinationChange}
+                placeholder="Destino"
+                icon={<LocationIcon sx={{ color: "grey.500", mr: 1 }} />}
               />
-            </DemoContainer>
-          </Grid>
+            </Grid>
 
-          {searchData.tripType !== "2" && (
-            <Grid size={{ xs: 12, sm: 6 }}>
+            <Grid size={{ xs: 12, sm: searchData.tripType === "2" ? 12 : 6 }}>
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
-                  label="Fecha de vuelta"
+                  label="Fecha de ida"
                   format="DD-MM-YYYY"
-                  onChange={handleReturnDateChange}
+                  onChange={handleDateChange}
                   slotProps={{
                     textField: {
                       fullWidth: true,
                     },
                   }}
-                  minDate={dayjs(searchData.date)}
+                  minDate={dayjs()}
                 />
               </DemoContainer>
             </Grid>
-          )}
-        </Grid>
 
-        {/* Search Button */}
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <Button
-            variant="contained"
-            onClick={handleSearch}
-            startIcon={<SearchIcon />}
-            size="medium"
-            sx={{
-              borderRadius: 8,
-            }}
-          >
-            Buscar
-          </Button>
+            {searchData.tripType !== "2" && (
+              <Grid size={{ xs: 12, sm: 6 }}>
+                <DemoContainer components={["DatePicker"]}>
+                  <DatePicker
+                    label="Fecha de vuelta"
+                    format="DD-MM-YYYY"
+                    onChange={handleReturnDateChange}
+                    slotProps={{
+                      textField: {
+                        fullWidth: true,
+                      },
+                    }}
+                    minDate={dayjs(searchData.date)}
+                  />
+                </DemoContainer>
+              </Grid>
+            )}
+          </Grid>
+
+          {/* Search Button */}
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              variant="contained"
+              onClick={handleSearch}
+              startIcon={<SearchIcon />}
+              size="medium"
+              sx={{
+                borderRadius: 8,
+              }}
+              disabled={
+                !searchData.origin ||
+                !searchData.destination ||
+                !searchData.date ||
+                (searchData.tripType === "1" && !searchData.returnDate)
+              }
+            >
+              Buscar
+            </Button>
+          </Box>
+        </CardContent>
+      </Card>
+
+      {/* Search Results */}
+      {hasSearched && (
+        <Box sx={{ mt: 4 }}>
+          <SearchResults
+            itineraries={searchResults}
+            onClearResults={handleClearResults}
+          />
         </Box>
-      </CardContent>
-    </Card>
+      )}
+    </>
   );
 };
 export default Search;

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Header } from "../../shared/components/Header/Header";
 import { useTheme } from "../../shared/hooks/useTheme";
 import { MainLayouts } from "../../layouts/MainLayouts";
@@ -10,6 +11,7 @@ import flightsBlack from "../../assets/flights_black.svg";
 
 const Home = () => {
   const { isDarkMode } = useTheme();
+  const [showSearchResults, setShowSearchResults] = useState(false);
   const logo = isDarkMode ? flightsBlack : flightsWhite;
 
   return (
@@ -22,14 +24,7 @@ const Home = () => {
           position: "relative",
         }}
       >
-        <img
-          src={logo}
-          alt="Fondo de viajes"
-          style={{
-            width: "100%",
-            height: "auto",
-          }}
-        />
+        <img src={logo} alt="Fondo de viajes" width="100%" height="auto" />
         <div
           style={{
             position: "absolute",
@@ -48,9 +43,13 @@ const Home = () => {
         </div>
       </div>
       <MainLayouts>
-        <Search />
-        <FAQ />
-        <MoreFlights />
+        <Search onSearchResultsChange={setShowSearchResults} />
+        {!showSearchResults && (
+          <>
+            <FAQ />
+            <MoreFlights />
+          </>
+        )}
         <Footer />
       </MainLayouts>
     </>
