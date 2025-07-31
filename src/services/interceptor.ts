@@ -6,7 +6,7 @@ export const axiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
   headers: {
     "Content-Type": "application/json",
-    "x-rapidapi-key": "a4a3e9964amshffb97937a4b3c04p1276bcjsn8212b7edc92es",
+    "x-rapidapi-key": "388aada64dmsh2e2cf3532f89697p1e3f62jsn4686d567fa47",
     "x-rapidapi-host": "sky-scrapper.p.rapidapi.com",
   },
 });
