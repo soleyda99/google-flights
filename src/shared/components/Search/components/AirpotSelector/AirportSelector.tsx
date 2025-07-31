@@ -117,7 +117,7 @@ export const AirportSelector = ({
             borderColor: "divider",
           }}
         >
-          {suggestions.length > 0 && (
+          {suggestions?.length > 0 && (
             <List dense>
               {suggestions.map((suggestion, index) => (
                 <ListItem

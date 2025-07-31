@@ -26,7 +26,7 @@ export const SearchResults = ({
   itineraries,
   onClearResults,
 }: SearchResultsProps) => {
-  if (!itineraries || itineraries.length === 0) {
+  if (!itineraries || itineraries?.length === 0) {
     return (
       <Box
         display="flex"
