@@ -29,7 +29,7 @@ axiosInstance.interceptors.response.use(
     return response;
   },
   (error) => {
-    alert(error.response.data.message); // alerta global de errores
+    console.log(error.response.data.message); // colocar una alerta global de errores
     store.dispatch(setLoading(false)); // Oculta el spinner en caso de error
     return Promise.reject(error);
   }
