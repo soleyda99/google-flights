@@ -15,9 +15,9 @@ import {
   Flight as FlightIcon,
   LocationCity as CityIcon,
 } from "@mui/icons-material";
-import type { AirportSuggestion } from "../interfaces/types";
-import { useDebounce } from "../hooks/debounceTime";
-import { getAirports } from "../../../../services/searchServices";
+import type { AirportSuggestion } from "../../interfaces/types";
+import { getAirports } from "../../../../../services/searchServices";
+import { useDebounce } from "../../hooks/debounceTime";
 
 interface AirportSelectorProps {
   value: string;

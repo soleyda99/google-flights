@@ -20,7 +20,7 @@ import type {
   Itinerary,
   SearchResultsProps,
 } from "./interfaces/type";
-import { formatDuration, formatTime } from "../../utils/format";
+import { formatDuration, formatTime } from "../../../../utils/format";
 
 export const SearchResults = ({
   itineraries,

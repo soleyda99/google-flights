@@ -22,16 +22,16 @@ import {
   CLASS_OPTIONS,
   DEFAULT_SEARCH_DATA,
 } from "./constant/constant";
-import { PassengerSelector } from "./components/PassengerSelector";
+import { PassengerSelector } from "./components/PassengerSelector/PassengerSelector";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { AirportSelector } from "./components/AirportSelector";
-import { SearchResults } from "../SearchResults/SearchResults";
 import type { SearchData } from "./interfaces/types";
-import type { Itinerary } from "../SearchResults/interfaces/type";
 import type { Dayjs } from "dayjs";
 import dayjs from "dayjs";
 import { searchFlights } from "../../../services/searchServices";
+import type { Itinerary } from "./components/SearchResults/interfaces/type";
+import { AirportSelector } from "./components/AirpotSelector/AirportSelector";
+import { SearchResults } from "./components/SearchResults/SearchResults";
 
 interface SearchProps {
   onSearchResultsChange?: (hasResults: boolean) => void;
