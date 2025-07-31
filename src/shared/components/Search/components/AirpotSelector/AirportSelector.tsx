@@ -38,7 +38,7 @@ export const AirportSelector = ({
   const getAirportSuggestions = async (
     query: string
   ): Promise<AirportSuggestion[]> => {
-    if (!query || query.length < 3) return [];
+    if (!query || query?.length < 3) return [];
 
     try {
       const response = await getAirports(query);
