@@ -62,7 +62,7 @@ const Search = ({ onSearchResultsChange }: SearchProps) => {
 
   const handleSearch = async () => {
     const response = await searchFlights(searchData);
-    if (response.data) {
+    if (response.status) {
       setSearchResults(response.data.itineraries);
       setHasSearched(true);
       onSearchResultsChange?.(true);
